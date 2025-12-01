@@ -1,8 +1,5 @@
 @import "tailwindcss";
 
-/* Define a custom variant for class-based dark mode in Tailwind 4.
-  This allows 'dark:text-white' to work when the 'dark' class is present on html/body.
-*/
 @custom-variant dark (&:where(.dark, .dark *));
 
 :root {
