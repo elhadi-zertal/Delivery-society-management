@@ -2,6 +2,7 @@
 import React, { useState } from 'react';
 import { ZoomIn, ZoomOut } from 'lucide-react';
 import DeepSeek from '@/components/MCD/DeepSeek';
+import ChatGpt from '@/components/MCD/ChatGpt';
 
 const page = () => {
   const [zoom, setZoom] = useState(1);
@@ -330,6 +331,7 @@ const page = () => {
       </div>
     </div>
     <DeepSeek/>
+    <ChatGpt/>
     </>
   );
 };
