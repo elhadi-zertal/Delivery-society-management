@@ -92,8 +92,8 @@ clientSchema.statics.generateCode = async function (): Promise<string> {
     return `${prefix}${nextNumber.toString().padStart(6, '0')}`;
 };
 
-// Pre-save: generate code if not set
-clientSchema.pre('save', async function () {
+// Pre-validate: generate code if not set
+clientSchema.pre('validate', async function () {
     if (!this.code) {
         this.code = await (this.constructor as IClientModel).generateCode();
     }
