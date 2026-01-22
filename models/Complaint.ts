@@ -1,10 +1,11 @@
 import mongoose, { Schema, Document, Model, Types } from 'mongoose';
 import { IComplaint, ComplaintStatus, ComplaintNature } from '@/types';
 
-export interface IComplaintDocument extends Omit<IComplaint, '_id' | 'client' | 'shipments' | 'invoice' | 'resolvedBy' | 'assignedTo'>, Document {
-    client: Types.ObjectId;
+export interface IComplaintDocument extends Omit<IComplaint, '_id' | 'client' | 'shipments' | 'invoice' | 'resolvedBy' | 'assignedTo' | 'deliveryTour'>, Document {
+    client?: Types.ObjectId;
     shipments?: Types.ObjectId[];
     invoice?: Types.ObjectId;
+    deliveryTour?: Types.ObjectId;
     resolvedBy?: Types.ObjectId;
     assignedTo?: Types.ObjectId;
 }
@@ -26,7 +27,12 @@ const complaintSchema = new Schema<IComplaintDocument>(
         client: {
             type: Schema.Types.ObjectId,
             ref: 'Client',
-            required: [true, 'Client is required'],
+            required: false,
+        },
+        deliveryTour: {
+            type: Schema.Types.ObjectId,
+            ref: 'DeliveryTour',
+            required: false,
         },
 
         // Related entities

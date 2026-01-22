@@ -348,13 +348,17 @@ export const updateIncidentSchema = z.object({
 // ============================================================================
 
 export const createComplaintSchema = z.object({
-    client: objectIdSchema,
+    client: objectIdSchema.optional(),
+    deliveryTour: objectIdSchema.optional(),
     shipments: z.array(objectIdSchema).optional(),
     invoice: objectIdSchema.optional(),
     nature: z.nativeEnum(ComplaintNature),
     description: z.string().min(1, 'Description is required'),
     priority: z.enum(['low', 'medium', 'high', 'urgent']).optional().default('medium'),
     attachments: z.array(z.string().url()).optional().default([]),
+}).refine(data => data.client || data.deliveryTour, {
+    message: "At least a client or a delivery tour must be associated with the complaint",
+    path: ["client"]
 });
 
 export const updateComplaintSchema = z.object({

@@ -45,5 +45,32 @@ export const apiClient = {
             return fetcher('/api/auth/signup', 'POST', data);
         },
     },
-    // Add other API groups here as needed
+    driver: {
+        getTours: async () => {
+            return fetcher<any[]>('/api/driver/tours', 'GET');
+        },
+    },
+    tours: {
+        getById: async (id: string) => {
+            return fetcher<any>(`/api/tours/${id}`, 'GET');
+        },
+        reorderShipments: async (id: string, shipmentIds: string[]) => {
+            return fetcher<any>(`/api/tours/${id}/reorder`, 'PATCH', { shipmentIds });
+        },
+    },
+    incidents: {
+        create: async (data: unknown) => {
+            return fetcher<any>('/api/incidents', 'POST', data);
+        },
+    },
+    complaints: {
+        create: async (data: unknown) => {
+            return fetcher<any>('/api/complaints', 'POST', data);
+        },
+    },
+    upload: {
+        file: async (base64: string, folder?: string) => {
+            return fetcher<any>('/api/upload', 'POST', { file: base64, folder });
+        },
+    },
 };

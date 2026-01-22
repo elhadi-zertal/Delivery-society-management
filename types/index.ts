@@ -437,9 +437,10 @@ export interface IIncident extends BaseDocument {
 
 export interface IComplaint extends BaseDocument {
     complaintNumber: string;
-    client: Types.ObjectId | string | IClient;
+    client?: Types.ObjectId | string | IClient;
 
     // Related entities
+    deliveryTour?: Types.ObjectId | string | IDeliveryTour;
     shipments?: Types.ObjectId[] | string[] | IShipment[];
     invoice?: Types.ObjectId | string | IInvoice;
 

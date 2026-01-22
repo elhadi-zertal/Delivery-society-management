@@ -2,6 +2,8 @@ import { auth } from "@/lib/auth/auth";
 import { connectDB } from "@/lib/db";
 import RegistrationDemand from "@/models/RegistrationDemand";
 import User from "@/models/User";
+import Driver from "@/models/Driver";
+import { DriverStatus } from "@/types";
 import { NextResponse } from "next/server";
 
 export async function POST(
@@ -28,7 +30,7 @@ export async function POST(
 
         // 3. Create User directly (bypass Mongoose middleware to avoid double hashing)
         // Since demand.password is already hashed, normal User.create would re-hash it.
-        await User.collection.insertOne({
+        const userResult = await User.collection.insertOne({
             name: demand.name,
             email: demand.email,
             password: demand.password,
@@ -39,7 +41,33 @@ export async function POST(
             __v: 0
         });
 
-        // 4. Delete Demand
+        // 4. Create Driver profile if role is driver
+        if (demand.role === 'driver') {
+            const nameParts = demand.name.split(' ');
+            const firstName = nameParts[0];
+            const lastName = nameParts.slice(1).join(' ') || 'Driver';
+
+            await Driver.create({
+                firstName,
+                lastName,
+                email: demand.email,
+                phone: '000-000-0000', // Placeholder
+                address: {
+                    street: 'Placeholder',
+                    city: 'Placeholder',
+                    postalCode: '00000',
+                    country: 'Placeholder'
+                },
+                licenseNumber: `PENDING-${Date.now()}`,
+                licenseExpiry: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000), // 1 year from now
+                licenseType: 'B',
+                status: DriverStatus.AVAILABLE,
+                hireDate: new Date(),
+                isActive: true
+            });
+        }
+
+        // 5. Delete Demand
         await RegistrationDemand.findByIdAndDelete(id);
 
         return NextResponse.json({ message: "User approved successfully" }, { status: 200 });
