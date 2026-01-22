@@ -26,7 +26,7 @@ import { IncidentType } from '@/types';
 import { apiClient } from '@/lib/api-client';
 import { toast } from 'sonner';
 import { Camera, X, Loader2 } from 'lucide-react';
-import { fileToBase64 } from '@/lib/cloudinary';
+import { fileToBase64 } from '@/lib/utils/file';
 
 const incidentFormSchema = z.object({
     type: z.nativeEnum(IncidentType),

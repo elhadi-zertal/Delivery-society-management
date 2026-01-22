@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { auth, signOut } from "@/lib/auth/auth";
+import { signOut } from "next-auth/react";
 import { apiClient } from "@/lib/api-client";
 import { IDeliveryTour, TourStatus } from "@/types";
 import { 

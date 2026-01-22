@@ -25,7 +25,7 @@ import { ComplaintNature } from '@/types';
 import { apiClient } from '@/lib/api-client';
 import { toast } from 'sonner';
 import { Loader2, Paperclip, X } from 'lucide-react';
-import { fileToBase64 } from '@/lib/cloudinary';
+import { fileToBase64 } from '@/lib/utils/file';
 
 const complaintFormSchema = z.object({
     nature: z.nativeEnum(ComplaintNature),
