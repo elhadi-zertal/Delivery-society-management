@@ -92,7 +92,7 @@ export default function ClientsPage() {
         try {
             if (editingClient) {
                 await clientsApi.update(editingClient._id.toString(), values);
-                toast.success("Client updated updated");
+                toast.success("Client updated successfully");
             } else {
                 await clientsApi.create(values);
                 toast.success("Client created successfully");
