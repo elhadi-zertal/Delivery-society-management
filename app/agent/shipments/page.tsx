@@ -39,7 +39,9 @@ import {
     XCircle,
 } from "lucide-react";
 
-export default function ShipmentsPage() {
+import { Suspense } from "react";
+
+function ShipmentsContent() {
     const router = useRouter();
     const searchParams = useSearchParams();
     const [shipments, setShipments] = useState<IShipment[]>([]);
@@ -404,5 +406,13 @@ export default function ShipmentsPage() {
                 />
             )}
         </div>
+    );
+}
+
+export default function ShipmentsPage() {
+    return (
+        <Suspense fallback={<div>Loading shipments...</div>}>
+            <ShipmentsContent />
+        </Suspense>
     );
 }

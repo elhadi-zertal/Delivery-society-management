@@ -24,8 +24,9 @@ import { formatDate } from "@/lib/utils/formatting";
 import { exportToExcel, printTable } from "@/lib/utils/export";
 
 import { useSearchParams } from "next/navigation";
+import { Suspense } from "react";
 
-export default function VehiclesPage() {
+function VehiclesContent() {
     const searchParams = useSearchParams();
     const [data, setData] = useState<IVehicle[]>([]);
     const [loading, setLoading] = useState(true);
@@ -275,5 +276,13 @@ export default function VehiclesPage() {
                 variant="destructive"
             />
         </div>
+    );
+}
+
+export default function VehiclesPage() {
+    return (
+        <Suspense fallback={<div>Loading vehicles...</div>}>
+            <VehiclesContent />
+        </Suspense>
     );
 }

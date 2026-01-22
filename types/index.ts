@@ -240,8 +240,8 @@ export interface IServiceType extends BaseDocument {
 // ============================================================================
 
 export interface IPricing extends BaseDocument {
-    serviceType: Types.ObjectId | IServiceType;
-    destination: Types.ObjectId | IDestination;
+    serviceType: Types.ObjectId | string | IServiceType;
+    destination: Types.ObjectId | string | IDestination;
     baseRate: number;
     weightRate: number; // per kg
     volumeRate: number; // per m³
@@ -273,9 +273,9 @@ export interface IPackageDetails {
 
 export interface IShipment extends BaseDocument {
     shipmentNumber: string; // Auto-generated
-    client: Types.ObjectId | IClient;
-    serviceType: Types.ObjectId | IServiceType;
-    destination: Types.ObjectId | IDestination;
+    client: Types.ObjectId | string | IClient;
+    serviceType: Types.ObjectId | string | IServiceType;
+    destination: Types.ObjectId | string | IDestination;
 
     // Sender info
     senderName: string;
@@ -312,8 +312,8 @@ export interface IShipment extends BaseDocument {
     actualDeliveryDate?: Date;
 
     // References
-    deliveryTour?: Types.ObjectId | IDeliveryTour;
-    invoice?: Types.ObjectId | IInvoice;
+    deliveryTour?: Types.ObjectId | string | IDeliveryTour;
+    invoice?: Types.ObjectId | string | IInvoice;
 
     notes?: string;
     isInvoiced: boolean;
@@ -326,9 +326,9 @@ export interface IShipment extends BaseDocument {
 export interface IDeliveryTour extends BaseDocument {
     tourNumber: string;
     date: Date;
-    driver: Types.ObjectId | IDriver;
-    vehicle: Types.ObjectId | IVehicle;
-    shipments: Types.ObjectId[] | IShipment[];
+    driver: Types.ObjectId | string | IDriver;
+    vehicle: Types.ObjectId | string | IVehicle;
+    shipments: Types.ObjectId[] | string[] | IShipment[];
 
     status: TourStatus;
 
@@ -363,8 +363,8 @@ export interface IDeliveryTour extends BaseDocument {
 
 export interface IInvoice extends BaseDocument {
     invoiceNumber: string;
-    client: Types.ObjectId | IClient;
-    shipments: Types.ObjectId[] | IShipment[];
+    client: Types.ObjectId | string | IClient;
+    shipments: Types.ObjectId[] | string[] | IShipment[];
 
     // Amounts
     amountHT: number; // Before tax
@@ -390,8 +390,8 @@ export interface IInvoice extends BaseDocument {
 
 export interface IPayment extends BaseDocument {
     paymentNumber: string;
-    invoice: Types.ObjectId | IInvoice;
-    client: Types.ObjectId | IClient;
+    invoice: Types.ObjectId | string | IInvoice;
+    client: Types.ObjectId | string | IClient;
 
     amount: number;
     paymentMethod: PaymentMethod;
@@ -410,10 +410,10 @@ export interface IIncident extends BaseDocument {
     type: IncidentType;
 
     // Related entities (at least one required)
-    shipment?: Types.ObjectId | IShipment;
-    deliveryTour?: Types.ObjectId | IDeliveryTour;
-    vehicle?: Types.ObjectId | IVehicle;
-    driver?: Types.ObjectId | IDriver;
+    shipment?: Types.ObjectId | string | IShipment;
+    deliveryTour?: Types.ObjectId | string | IDeliveryTour;
+    vehicle?: Types.ObjectId | string | IVehicle;
+    driver?: Types.ObjectId | string | IDriver;
 
     description: string;
     location?: string;
@@ -426,9 +426,9 @@ export interface IIncident extends BaseDocument {
     status: IncidentStatus;
     resolution?: string;
     resolvedAt?: Date;
-    resolvedBy?: Types.ObjectId | IUser;
+    resolvedBy?: Types.ObjectId | string | IUser;
 
-    reportedBy: Types.ObjectId | IUser;
+    reportedBy: Types.ObjectId | string | IUser;
 }
 
 // ============================================================================
@@ -437,11 +437,11 @@ export interface IIncident extends BaseDocument {
 
 export interface IComplaint extends BaseDocument {
     complaintNumber: string;
-    client: Types.ObjectId | IClient;
+    client: Types.ObjectId | string | IClient;
 
     // Related entities
-    shipments?: Types.ObjectId[] | IShipment[];
-    invoice?: Types.ObjectId | IInvoice;
+    shipments?: Types.ObjectId[] | string[] | IShipment[];
+    invoice?: Types.ObjectId | string | IInvoice;
 
     nature: ComplaintNature;
     description: string;
@@ -457,7 +457,7 @@ export interface IComplaint extends BaseDocument {
     // Communication
     attachments?: string[]; // Cloudinary URLs
 
-    assignedTo?: Types.ObjectId | IUser;
+    assignedTo?: Types.ObjectId | string | IUser;
 }
 
 // ============================================================================
