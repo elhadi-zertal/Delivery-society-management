@@ -19,7 +19,7 @@ const deliveryTourSchema = new Schema<IDeliveryTourDocument>(
         tourNumber: {
             type: String,
             unique: true,
-            required: true,
+            // Auto-generated in pre-save hook
         },
         date: {
             type: Date,
