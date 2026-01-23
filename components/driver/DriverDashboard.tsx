@@ -79,7 +79,7 @@ export function DriverDashboardContent({ session }: { session: any }) {
                     variant="ghost" 
                     size="icon" 
                     className="text-zinc-500 hover:text-red-400 hover:bg-red-400/5 rounded-full transition-all"
-                    onClick={() => signOut({ redirectTo: "/signin-up" })}
+                    onClick={() => signOut({ callbackUrl: "/signin-up" })}
                 >
                     <LogOut className="h-5 w-5" />
                 </Button>

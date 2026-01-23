@@ -1,6 +1,9 @@
 import { connectDB } from '@/lib/db';
 import DeliveryTour from '@/models/DeliveryTour';
 import Driver from '@/models/Driver';
+import Shipment from '@/models/Shipment'; // Required for populate
+import Client from '@/models/Client'; // Required for nested populate
+import Destination from '@/models/Destination'; // Required for nested populate
 import {
     withErrorHandler,
     successResponse,
