@@ -245,7 +245,6 @@ shipmentSchema.pre('save', async function () {
 });
 
 // Indexes
-shipmentSchema.index({ shipmentNumber: 1 });
 shipmentSchema.index({ client: 1 });
 shipmentSchema.index({ status: 1 });
 shipmentSchema.index({ createdAt: -1 });

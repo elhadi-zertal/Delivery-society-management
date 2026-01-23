@@ -3,6 +3,9 @@ import DeliveryTour from '@/models/DeliveryTour';
 import Driver from '@/models/Driver';
 import Vehicle from '@/models/Vehicle';
 import Shipment from '@/models/Shipment';
+import Client from '@/models/Client';
+import Destination from '@/models/Destination';
+import Incident from '@/models/Incident';
 import { TourStatus, DriverStatus, VehicleStatus, ShipmentStatus } from '@/types';
 import {
     withErrorHandler,
