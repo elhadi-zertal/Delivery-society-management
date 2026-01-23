@@ -18,7 +18,7 @@ import {
   useSortable,
 } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
-import { IShipment } from '@/types';
+import { IShipment, ShipmentStatus } from '@/types';
 import { GripVertical, MapPin, Phone, ChevronRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -28,9 +28,10 @@ interface SortableItemProps {
   id: string;
   shipment: IShipment;
   index: number;
+  onAction?: (shipment: IShipment) => void;
 }
 
-function SortableShipmentItem({ id, shipment, index }: SortableItemProps) {
+function SortableShipmentItem({ id, shipment, index, onAction }: SortableItemProps) {
   const {
     attributes,
     listeners,
@@ -69,6 +70,16 @@ function SortableShipmentItem({ id, shipment, index }: SortableItemProps) {
           <h3 className="text-sm font-bold truncate">
             {(shipment.client as any)?.companyName || (shipment.client as any)?.firstName + ' ' + (shipment.client as any)?.lastName || "Recipient"}
           </h3>
+          <Badge 
+            variant="outline" 
+            className={`text-[8px] h-4 py-0 uppercase font-black ${
+              shipment.status === ShipmentStatus.DELIVERED ? 'bg-green-500/10 text-green-500 border-green-500/20' :
+              shipment.status === ShipmentStatus.FAILED_DELIVERY ? 'bg-red-500/10 text-red-500 border-red-500/20' :
+              'bg-zinc-800 text-zinc-400 border-zinc-700'
+            }`}
+          >
+            {shipment.status.replace('_', ' ')}
+          </Badge>
         </div>
         <div className="flex items-center gap-1.5 text-xs text-zinc-500">
           <MapPin className="h-3 w-3" />
@@ -84,7 +95,11 @@ function SortableShipmentItem({ id, shipment, index }: SortableItemProps) {
         <Button variant="ghost" size="icon" className="h-9 w-9 text-zinc-500 hover:text-green-500 hover:bg-green-500/5 rounded-full">
           <Phone className="h-4 w-4" />
         </Button>
-        <Button size="icon" className="h-9 w-9 bg-zinc-800 hover:bg-zinc-700 text-zinc-300 rounded-full">
+        <Button 
+          size="icon" 
+          className="h-9 w-9 bg-zinc-800 hover:bg-zinc-700 text-zinc-300 rounded-full"
+          onClick={() => onAction?.(shipment)}
+        >
           <ChevronRight className="h-4 w-4" />
         </Button>
       </div>
@@ -96,9 +111,17 @@ interface TourShipmentListProps {
   shipments: IShipment[];
   tourId: string;
   onReorder: (newShipments: IShipment[]) => void;
+  onAction?: (shipment: IShipment) => void;
+  isDraggable?: boolean;
 }
 
-export function TourShipmentList({ shipments: initialShipments, tourId, onReorder }: TourShipmentListProps) {
+export function TourShipmentList({ 
+  shipments: initialShipments, 
+  tourId, 
+  onReorder,
+  onAction,
+  isDraggable = true 
+}: TourShipmentListProps) {
   const [items, setItems] = useState(initialShipments);
 
   const sensors = useSensors(
@@ -113,6 +136,7 @@ export function TourShipmentList({ shipments: initialShipments, tourId, onReorde
   );
 
   const handleDragEnd = async (event: DragEndEvent) => {
+    if (!isDraggable) return;
     const { active, over } = event;
 
     if (over && active.id !== over.id) {
@@ -140,27 +164,35 @@ export function TourShipmentList({ shipments: initialShipments, tourId, onReorde
     }
   };
 
+  const content = (
+    <SortableContext
+      items={items.map(s => s._id.toString())}
+      strategy={verticalListSortingStrategy}
+    >
+      <div className="space-y-3">
+        {items.map((shipment, index) => (
+          <SortableShipmentItem 
+            key={shipment._id.toString()} 
+            id={shipment._id.toString()} 
+            shipment={shipment} 
+            index={index}
+          />
+        ))}
+      </div>
+    </SortableContext>
+  );
+
+  if (!isDraggable) {
+    return <div className="space-y-3">{content}</div>;
+  }
+
   return (
     <DndContext
       sensors={sensors}
       collisionDetection={closestCenter}
       onDragEnd={handleDragEnd}
     >
-      <SortableContext
-        items={items.map(s => s._id.toString())}
-        strategy={verticalListSortingStrategy}
-      >
-        <div className="space-y-3">
-          {items.map((shipment, index) => (
-            <SortableShipmentItem 
-              key={shipment._id.toString()} 
-              id={shipment._id.toString()} 
-              shipment={shipment} 
-              index={index}
-            />
-          ))}
-        </div>
-      </SortableContext>
+      {content}
     </DndContext>
   );
 }

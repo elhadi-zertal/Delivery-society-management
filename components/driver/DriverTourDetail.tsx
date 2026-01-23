@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { apiClient } from "@/lib/api-client";
-import { IDeliveryTour, IShipment, TourStatus } from "@/types";
+import { IDeliveryTour, IShipment, TourStatus, ShipmentStatus } from "@/types";
 import { 
     ChevronLeft, 
     MapPin, 
@@ -25,6 +25,7 @@ import { formatDate } from "@/lib/utils/formatting";
 import { TourShipmentList } from "./TourShipmentList";
 import { IncidentReportModal } from "./IncidentReportModal";
 import { ComplaintModal } from "./ComplaintModal";
+import { ShipmentActionModal } from "./ShipmentActionModal";
 
 export function DriverTourDetail() {
     const params = useParams();
@@ -35,6 +36,8 @@ export function DriverTourDetail() {
     // Modals state
     const [isIncidentModalOpen, setIsIncidentModalOpen] = useState(false);
     const [isComplaintModalOpen, setIsComplaintModalOpen] = useState(false);
+    const [isShipmentModalOpen, setIsShipmentModalOpen] = useState(false);
+    const [selectedShipment, setSelectedShipment] = useState<IShipment | null>(null);
 
     const fetchTour = async () => {
         try {
@@ -57,6 +60,67 @@ export function DriverTourDetail() {
         }
     };
 
+    const handleStartTour = async () => {
+        if (!tour) return;
+        try {
+            const response: any = await apiClient.tours.start(tour._id.toString());
+            setTour(response.data);
+            toast.success("Tour started! You are now online.");
+        } catch (error) {
+            toast.error("Failed to start tour");
+        }
+    };
+
+    const handleFinishTour = async () => {
+        if (!tour) return;
+        
+        const shipments = tour.shipments as unknown as IShipment[];
+        const deliveriesCompleted = shipments.filter(s => s.status === ShipmentStatus.DELIVERED).length;
+        const deliveriesFailed = shipments.filter(s => s.status === ShipmentStatus.FAILED_DELIVERY).length;
+        const remaining = shipments.filter(s => s.status === ShipmentStatus.PENDING).length;
+        
+        if (remaining > 0) {
+            if (!confirm(`You still have ${remaining} pending shipments. Are you sure you want to finish and close the tour?`)) {
+                return;
+            }
+        }
+
+        try {
+            const response: any = await apiClient.tours.complete(tour._id.toString(), {
+                actualRoute: {
+                    startTime: tour.actualRoute?.startTime || new Date().toISOString(),
+                    endTime: new Date().toISOString(),
+                    actualDistance: tour.plannedRoute.estimatedDistance, // Use planned as fallback
+                    actualDuration: tour.plannedRoute.estimatedDuration, // Use planned as fallback
+                    fuelConsumed: 1, // Placeholder
+                },
+                deliveriesCompleted,
+                deliveriesFailed,
+                notes: `Tour completed with ${deliveriesCompleted} successful and ${deliveriesFailed} failed deliveries.`
+            });
+            setTour(response.data);
+            toast.success("Tour completed and closed!");
+            router.push('/driver/dashboard');
+        } catch (error) {
+            toast.error("Failed to finish tour");
+        }
+    };
+
+    const handleShipmentAction = (shipment: IShipment) => {
+        setSelectedShipment(shipment);
+        setIsShipmentModalOpen(true);
+    };
+
+    const handleShipmentUpdate = (updatedShipment: IShipment) => {
+        if (tour) {
+            const shipments = tour.shipments as unknown as IShipment[];
+            const newShipments = shipments.map(s => 
+                s._id.toString() === updatedShipment._id.toString() ? updatedShipment : s
+            );
+            setTour({ ...tour, shipments: newShipments });
+        }
+    };
+
     if (loading) {
         return (
             <div className="min-h-screen bg-[#0a0a0a] flex items-center justify-center">
@@ -73,6 +137,9 @@ export function DriverTourDetail() {
             </div>
         );
     }
+
+    const isPlanned = tour.status === TourStatus.PLANNED;
+    const isInProgress = tour.status === TourStatus.IN_PROGRESS;
 
     return (
         <div className="min-h-screen bg-[#0a0a0a] text-zinc-100 p-4 md:p-8 font-sans">
@@ -130,12 +197,27 @@ export function DriverTourDetail() {
 
                 {/* Main Actions */}
                 <div className="flex flex-wrap gap-3">
-                    <Button 
-                        className="bg-green-600 hover:bg-green-700 text-white rounded-2xl h-14 px-8 shadow-2xl shadow-green-600/20 text-md font-bold transition-all hover:scale-[1.02]"
-                    >
-                        <Navigation className="h-5 w-5 mr-3" />
-                        Go Online / Start Route
-                    </Button>
+                    {isPlanned ? (
+                        <Button 
+                            className="bg-green-600 hover:bg-green-700 text-white rounded-2xl h-14 px-8 shadow-2xl shadow-green-600/20 text-md font-bold transition-all hover:scale-[1.02]"
+                            onClick={handleStartTour}
+                        >
+                            <Navigation className="h-5 w-5 mr-3" />
+                            Go Online / Start Route
+                        </Button>
+                    ) : isInProgress ? (
+                        <Button 
+                            className="bg-blue-600 hover:bg-blue-700 text-white rounded-2xl h-14 px-8 shadow-2xl shadow-blue-600/20 text-md font-bold transition-all hover:scale-[1.02]"
+                            onClick={handleFinishTour}
+                        >
+                            <CheckCircle2 className="h-5 w-5 mr-3" />
+                            Finish & Close Tour
+                        </Button>
+                    ) : (
+                        <Badge className="bg-zinc-800 text-zinc-400 border-zinc-700 h-14 px-8 rounded-2xl text-md font-bold">
+                            Tour {tour.status.replace('_', ' ')}
+                        </Badge>
+                    )}
                     <Button 
                         variant="outline" 
                         className="border-zinc-800 bg-[#111111]/50 hover:bg-red-950/20 hover:border-red-500/30 rounded-2xl h-14 px-6 text-zinc-400 hover:text-red-400 transition-all"
@@ -164,15 +246,19 @@ export function DriverTourDetail() {
                                 <Package className="h-6 w-6 text-green-500" />
                                 Sequence Flow
                             </h2>
-                            <p className="text-xs text-zinc-500 mt-1">Optimize your delivery order by dragging stops</p>
+                            <p className="text-xs text-zinc-500 mt-1">
+                                {isPlanned ? "Optimize your delivery order by dragging stops" : "Deliveries in progress"}
+                            </p>
                         </div>
-                        <Badge variant="outline" className="bg-zinc-900 border-zinc-800 text-[10px] py-1">Manual Sort Enabled</Badge>
+                        {isPlanned && <Badge variant="outline" className="bg-zinc-900 border-zinc-800 text-[10px] py-1">Manual Sort Enabled</Badge>}
                     </div>
 
                     <TourShipmentList 
                         shipments={tour.shipments as IShipment[]} 
                         tourId={tour._id.toString()}
                         onReorder={handleReorder}
+                        onAction={handleShipmentAction}
+                        isDraggable={isPlanned}
                     />
                 </section>
             </div>
@@ -188,6 +274,12 @@ export function DriverTourDetail() {
                 isOpen={isComplaintModalOpen} 
                 onClose={() => setIsComplaintModalOpen(false)}
                 tourId={tour._id.toString()}
+            />
+            <ShipmentActionModal
+                isOpen={isShipmentModalOpen}
+                onClose={() => setIsShipmentModalOpen(false)}
+                shipment={selectedShipment}
+                onUpdate={handleShipmentUpdate}
             />
         </div>
     );

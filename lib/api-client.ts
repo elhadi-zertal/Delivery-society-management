@@ -57,6 +57,17 @@ export const apiClient = {
         reorderShipments: async (id: string, shipmentIds: string[]) => {
             return fetcher<any>(`/api/tours/${id}/reorder`, 'PATCH', { shipmentIds });
         },
+        start: async (id: string) => {
+            return fetcher<any>(`/api/tours/${id}/start`, 'PATCH');
+        },
+        complete: async (id: string, data: any) => {
+            return fetcher<any>(`/api/tours/${id}/complete`, 'PATCH', data);
+        },
+    },
+    shipments: {
+        updateStatus: async (id: string, data: any) => {
+            return fetcher<any>(`/api/shipments/${id}/status`, 'PATCH', data);
+        },
     },
     incidents: {
         create: async (data: unknown) => {

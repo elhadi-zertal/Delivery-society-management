@@ -4,6 +4,7 @@ import Driver from '@/models/Driver';
 import Shipment from '@/models/Shipment'; // Required for populate
 import Client from '@/models/Client'; // Required for nested populate
 import Destination from '@/models/Destination'; // Required for nested populate
+import Incident from '@/models/Incident'; // Required for populate
 import {
     withErrorHandler,
     successResponse,
