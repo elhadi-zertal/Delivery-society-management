@@ -73,7 +73,6 @@ export function PricingForm({
                 setDestinations(dests);
                 setServiceTypes(types);
             } catch (err) {
-                console.error("Failed to load resources", err);
             } finally {
                 setLoadingResources(false);
             }

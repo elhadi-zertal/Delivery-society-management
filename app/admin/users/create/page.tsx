@@ -83,7 +83,6 @@ export default function CreateUserPage() {
             toast.success("User created successfully");
             router.push("/admin/users");
         } catch (error) {
-            console.error(error);
             toast.error("Failed to create user");
         } finally {
             setLoading(false);

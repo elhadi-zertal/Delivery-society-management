@@ -38,7 +38,6 @@ export default function PricingPage() {
             setData(pricing);
         } catch (error) {
             toast.error("Failed to fetch pricing");
-            console.error(error);
         } finally {
             setLoading(false);
         }

@@ -42,7 +42,6 @@ function VehiclesContent() {
             setData(vehicles);
         } catch (error) {
             toast.error("Failed to fetch vehicles");
-            console.error(error);
         } finally {
             setLoading(false);
         }

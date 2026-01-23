@@ -37,7 +37,6 @@ export function AssignComplaintModal({ isOpen, onClose, complaint, onSuccess }: 
                 const data = await usersApi.getAgents();
                 setAgents(data);
             } catch (error) {
-                console.error("Failed to load agents");
             }
         };
         if (isOpen) loadAgents();

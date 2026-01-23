@@ -20,7 +20,6 @@ export async function GET() {
         return NextResponse.json(demands, { status: 200 });
 
     } catch (error) {
-        console.error("Error fetching registration demands:", error);
         return NextResponse.json({ message: "Internal Server Error" }, { status: 500 });
     }
 }

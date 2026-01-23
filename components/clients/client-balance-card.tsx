@@ -25,7 +25,6 @@ export function ClientBalanceCard({ clientId }: ClientBalanceCardProps) {
                 const data = await invoicesApi.getByClient(clientId);
                 setInvoices(data);
             } catch (error) {
-                console.error("Failed to load client invoices", error);
             } finally {
                 setLoading(false);
             }

@@ -38,7 +38,6 @@ export default function DestinationsPage() {
             setData(destinations);
         } catch (error) {
             toast.error("Failed to fetch destinations");
-            console.error(error);
         } finally {
             setLoading(false);
         }

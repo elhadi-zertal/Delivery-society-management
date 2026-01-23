@@ -57,7 +57,6 @@ export const POST = withErrorHandler(async (request: Request) => {
     const parsed = createClientSchema.safeParse(body);
 
     if (!parsed.success) {
-        console.error('Client validation failed:', parsed.error.format());
         return errorResponse(parsed.error.issues.map(e => e.message).join(', '), 400);
     }
 

@@ -29,7 +29,6 @@ export async function DELETE(
         return NextResponse.json({ message: "Request rejected successfully" }, { status: 200 });
 
     } catch (error) {
-        console.error("Error rejecting user:", error);
         return NextResponse.json({ message: "Internal Server Error" }, { status: 500 });
     }
 }

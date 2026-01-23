@@ -23,7 +23,6 @@ export default function NotificationsPage() {
             const res = await notificationsApi.getNotifications();
             setNotifications(res.data);
         } catch (error) {
-            console.error(error);
             toast.error("Failed to load notifications");
         } finally {
             setLoading(false);

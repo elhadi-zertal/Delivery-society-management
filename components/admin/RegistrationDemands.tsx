@@ -34,7 +34,6 @@ export default function RegistrationDemands() {
                 toast.error("Failed to approve request");
             }
         } catch (err) {
-            console.error(err);
             toast.error("An error occurred");
         } finally {
             setProcessingId(null);
@@ -55,7 +54,6 @@ export default function RegistrationDemands() {
                 toast.error("Failed to reject request");
             }
         } catch (err) {
-            console.error(err);
             toast.error("An error occurred");
         } finally {
             setProcessingId(null);

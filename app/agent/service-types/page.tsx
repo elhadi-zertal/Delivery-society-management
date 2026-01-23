@@ -37,7 +37,6 @@ export default function ServiceTypesPage() {
             setData(serviceTypes);
         } catch (error) {
             toast.error("Failed to fetch service types");
-            console.error(error);
         } finally {
             setLoading(false);
         }

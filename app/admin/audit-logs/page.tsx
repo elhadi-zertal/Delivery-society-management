@@ -32,7 +32,6 @@ export default function AuditLogsPage() {
             const res = await fetchAuditLogs({ page, ...filter });
             setLogs(res.data || []);
         } catch (error) {
-            console.error("Failed to load logs");
             if (page === 1) {
                 setLogs([
                     { _id: '1', action: 'LOGIN', userId: { firstName: 'Admin', lastName: 'User', email: 'admin@example.com' }, createdAt: new Date().toISOString(), ipAddress: '192.168.1.1', status: 'success', description: 'User logged in successfully' },

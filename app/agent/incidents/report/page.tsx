@@ -69,7 +69,6 @@ export default function ReportIncidentPage() {
                 setDrivers(driversData);
                 setVehicles(vehiclesData);
             } catch (error) {
-                console.error("Failed to load reference data");
             }
         };
         loadData();

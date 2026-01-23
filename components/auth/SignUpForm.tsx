@@ -42,7 +42,6 @@ export function SignUpForm({ onSwitch }: SignUpFormProps) {
             });
             onSwitch();
         } catch (err: any) {
-            console.error(err);
             toast.error(err.message || "An unexpected error occurred");
         } finally {
             setIsLoading(false);

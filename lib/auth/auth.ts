@@ -85,7 +85,6 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
                         image: user.photoUrl || null,
                     };
                 } catch (error) {
-                    console.error('Auth error:', error);
                     return null;
                 }
             },

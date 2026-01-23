@@ -44,7 +44,6 @@ function FavoritesContent() {
             const res = await favoritesApi.getFavorites();
             setFavorites(res.data);
         } catch (error) {
-            console.error(error);
         } finally {
             setLoading(false);
         }

@@ -73,7 +73,6 @@ export async function POST(
         return NextResponse.json({ message: "User approved successfully" }, { status: 200 });
 
     } catch (error) {
-        console.error("Error approving user:", error);
         return NextResponse.json({ message: "Internal Server Error" }, { status: 500 });
     }
 }

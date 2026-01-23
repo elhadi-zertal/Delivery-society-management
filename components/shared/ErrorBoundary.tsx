@@ -33,7 +33,6 @@ export function AppErrorBoundary({ children }: { children: ReactNode }) {
                 window.location.reload();
             }}
             onError={(error) => {
-                console.error("ErrorBoundary caught an error:", error);
                 // Log to service if available
             }}
         >
@@ -43,7 +42,6 @@ export function AppErrorBoundary({ children }: { children: ReactNode }) {
 }
 
 export const handleApiError = (error: any) => {
-    console.error("API Error:", error);
 
     // Check for axios/fetch response error structure
     const status = error.response?.status || error.status;

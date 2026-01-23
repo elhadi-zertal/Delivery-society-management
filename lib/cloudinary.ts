@@ -60,7 +60,6 @@ export async function uploadToCloudinary(
             resourceType: result.resource_type,
         };
     } catch (error) {
-        console.error('Cloudinary upload error:', error);
         throw new Error('Failed to upload file to cloud storage');
     }
 }
@@ -89,7 +88,6 @@ export async function deleteFromCloudinary(
         });
         return result.result === 'ok';
     } catch (error) {
-        console.error('Cloudinary delete error:', error);
         return false;
     }
 }
@@ -119,7 +117,6 @@ export async function deleteMultipleFromCloudinary(
 
         return { deleted, failed };
     } catch (error) {
-        console.error('Cloudinary bulk delete error:', error);
         return { deleted: [], failed: publicIds };
     }
 }

@@ -47,7 +47,6 @@ export const GET = withAuth(async (session) => {
             }
         });
     } catch (error) {
-        console.error("Error fetching agent stats:", error);
         return NextResponse.json({ message: "Internal Server Error" }, { status: 500 });
     }
 }, { roles: [UserRole.AGENT, UserRole.ADMIN] });

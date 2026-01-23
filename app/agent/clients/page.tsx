@@ -38,7 +38,6 @@ export default function ClientsPage() {
             setData(clients);
         } catch (error) {
             toast.error("Failed to fetch clients");
-            console.error(error);
         } finally {
             setLoading(false);
         }

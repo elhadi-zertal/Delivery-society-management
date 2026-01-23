@@ -38,7 +38,6 @@ export function NotificationCenter() {
                 setUnreadCount(res.data.filter((n: any) => !n.read).length);
             }
         } catch (error) {
-            console.error("Failed to fetch notifications");
         }
     };
 

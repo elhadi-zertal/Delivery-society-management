@@ -55,7 +55,6 @@ export function ExportButton({ data, filename = "export", columns, title }: Expo
             doc.save(`${filename}.pdf`);
             toast.success("PDF exported successfully");
         } catch (error) {
-            console.error(error);
             toast.error("Failed to export PDF");
         }
     };

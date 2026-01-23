@@ -51,7 +51,6 @@ export function SignInForm() {
                 router.refresh();
             }
         } catch (err) {
-            console.error(err);
             toast.error("An unexpected error occurred");
         } finally {
             setIsLoading(false);

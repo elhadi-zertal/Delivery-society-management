@@ -38,7 +38,6 @@ export default function DriversPage() {
             setData(drivers);
         } catch (error) {
             toast.error("Failed to fetch drivers");
-            console.error(error);
         } finally {
             setLoading(false);
         }

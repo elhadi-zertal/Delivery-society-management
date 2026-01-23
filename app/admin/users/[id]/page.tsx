@@ -37,7 +37,6 @@ export default function UserDetailsPage() {
             const data = await res.json();
             setUser(data.data); // Assuming standarized API response format
         } catch (error) {
-            console.error(error);
             toast.error("Failed to load user details");
         } finally {
             setLoading(false);

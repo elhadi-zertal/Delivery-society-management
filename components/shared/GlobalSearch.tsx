@@ -41,7 +41,6 @@ export function GlobalSearch() {
                     const res = await searchApi.globalSearch(query);
                     setResults(res.data);
                 } catch (e) {
-                    console.error(e);
                 }
             }, 300);
             return () => clearTimeout(timer);
